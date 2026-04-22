@@ -223,6 +223,8 @@ oddsratio(data4, rev="c")  # Dado que nuestra matriz contiene en la columna 1 lo
 --
 ### Ejemplo 2
 
+Analicemos los datos proporcionados por Szumila (2010).
+
 ```
 # Crear nombres para las columnas y filas
 coln <- c("Conducta suicida + ","Conducta suicida -")
