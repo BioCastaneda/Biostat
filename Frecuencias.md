@@ -10,7 +10,7 @@ En este práctico realizaremos diversos análisis de frecuencias en R. Primero, 
 2. [Tablas de contingencia](https://github.com/lecastaneda/Bioestadistica/blob/main/Pr%C3%A1ctico%201.md#2-tablas-de-contingencia)
 3. [Razón de posibilidades (odds ratio)](https://github.com/lecastaneda/Bioestadistica/blob/main/Pr%C3%A1ctico%201.md#3-raz%C3%B3n-de-posibilidades-odds-ratio)
 
----
+
 ## 1. Prueba de bondad de ajuste.
 
 Las pruebas de bondad de ajuste permiten evaluar si una variable categórica se distribuye de una manera específica o no.
@@ -47,7 +47,6 @@ pie(data1, labels=nombres1)
 ```
    ![Pie1](https://github.com/lecastaneda/Bioestadistica/blob/main/Pie1)
 
---
 ### Ejemplo 2
 
    ![Ejemplo de bondad2](https://github.com/lecastaneda/Bioestadistica/blob/main/Ejemplo2.png)
@@ -125,12 +124,11 @@ test2
 test2$expected
 ```
 
----
+
 ## 2. Tablas de contingencia
 
 Las tablas de contingenciapermiten evaluar si la distribución de frecuencias en múltiples categorías se distribuyen de forma independientre entre las distintas categorías. Por ejemplo, si tenemos una tabla de contingencia de i columnas y j filas, las tablas de contingencia permiten evaluar si los valores de frecuencias son independientes entre filas y columnas.
 
---
 ### Ejemplo 1
 
    ![Ejemplo3](https://github.com/lecastaneda/Bioestadistica/blob/main/Ejemplo3.png)
@@ -187,12 +185,12 @@ data3$Glicemia <- factor(data3$Glicemia, levels=c("Normoglicemia","Hiperglicemia
 ggplot(data=data3, aes(x=Glicemia, fill=Condicion))+ geom_bar(position="dodge") + ylab("Pacientes")
 ```
    
----
+
 ## 3. Razón de posibilidades (odds ratio)
 
 Los odds ratio permiten evaluar la posibilidad de que un evento ocurra respecto a que ese evento no ocurra en una población dada una condición en particular.
 
---
+
 ### Ejemplo 1
 
    ![Tabla1](https://github.com/lecastaneda/Bioestadistica/blob/main/Tabla1.png)
@@ -220,7 +218,6 @@ oddsratio(data4, rev="c")  # Dado que nuestra matriz contiene en la columna 1 lo
                            # debemos incluir el argumento *rev="c"* que permitirá invertir las columnas.
 ```
 
---
 ### Ejemplo 2
 
 Analicemos los datos proporcionados por Szumila (2010).
