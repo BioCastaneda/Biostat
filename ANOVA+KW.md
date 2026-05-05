@@ -295,6 +295,6 @@ post.fdr <- data2a %>% wilcox_test(score ~ year) %>% adjust_pvalue(method="fdr")
 post.fdr
 
 plot14 + stat_pvalue_manual(post.fdr,label="p.adj.signif",tip.length = 0.02, 
-                            y.position=c(6.7,7.5,7.7,7,7.2,6.8))
+                            y.position=c(6.7,7.2,7.7))
 ```
 
