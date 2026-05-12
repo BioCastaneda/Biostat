@@ -10,7 +10,7 @@ En esta sesión de laboratorio computacional, llevaremos esa teoría a la práct
 
 Primero, cargaremos las librerías necesarias para la manipulación de datos y visualización.
 
-```{r}
+```r
 # Instalación previa requerida: install.packages(c("dplyr", "ggplot2", "knitr"))
 library(dplyr)
 library(ggplot2)
@@ -19,7 +19,7 @@ library(knitr)
 
 A continuación, leeremos el código en R que usaremos más tarde para graficar la distribución de _F_ bajo distintos escenarios. Para mantener las buenas prácticas de programación (principio DRY: *Don't Repeat Yourself*), crearemos primero una función graficadora personalizada con `ggplot2` y luego la aplicaremos a cada uno de nuestros tres diseños.
 
-```{r}
+```r
 # Leemos el código de una función para graficar la distribución de F bajo distintas hipótesis
 source("plot_F_power.r")
 ```
@@ -107,7 +107,7 @@ Para graficar la hipótesis alternativa ($H_A$), debemos introducir un concepto 
 
 - Bajo $H_A$ (existe un efecto real), la curva se desplaza hacia la derecha. Ese desplazamiento está dictado por el tamaño del efecto biológico, el cual modelamos usando una **Distribución $F$ No Central** ($NCP > 0$).
 
-```{r}
+```r
 # Ejecutar comando para Diseño de Bloques
 grafico_bloques <- plot_F_power(df1 = 2, df2 = 6, ncp = 12, 
                                 test_name = "Bloques (Efecto de la Dieta)", 
@@ -123,7 +123,7 @@ print(grafico_bloques)
 
 ### 2.1 Generación de Datos y Análisis Exploratorio
 
-```{r}
+```r
 # Generamos los datos
 lagos <- rep(c("Lago_Norte", "Lago_Sur"), each = 3, times=3)
 sitios <- rep(paste0("Sitio_", 1:6), times = 3)
@@ -150,7 +150,7 @@ ggplot(datos_anidados, aes(x = Sitio, y = Conc, fill = Lago)) +
 
 Como discutimos en clase, en un diseño anidado, el efecto principal (Lago) **no** se prueba contra el error residual de las réplicas, sino contra la variabilidad de los subgrupos (Sitios dentro de Lagos).
 
-```{r}
+```r
 # Ajustamos el modelo indicando que Sitio está anidado dentro de Lago (%in%)
 modelo_anidado <- aov(Conc ~ Lago + Sitio %in% Lago, data = datos_anidados)
 resumen_anid <- summary(modelo_anidado)
@@ -161,7 +161,7 @@ Compare la tabla ANOVA con lo mostrado en clase. ¿Con iguales? ¿Hay algún pro
 
 Usemos el ahora el operador `/` para especificar la jerarquía de efectos en el modelo, como se muestra en esta referencia [5.2.3: Nested Model in R - Statistics LibreTexts](https://stats.libretexts.org/Bookshelves/Advanced_Statistics/Analysis_of_Variance_and_Design_of_Experiments/05%3A_Multi-Factor_ANOVA/5.02%3A_Nested_Treatment_Design/5.2.03%3A_Nested_Model_in_R).
 
-```{r}
+```r
 modelo_anidado_2 <- aov(Conc ~ Lago + Lago/Sitio, data = datos_anidados)
 resumen_anid_2 <- summary(modelo_anidado_2)
 print(resumen_anid_2)
@@ -171,7 +171,7 @@ print(resumen_anid_2)
 
 Intentemos una vez más, pero ahora especificando que Sito no es un efecto fijo, sino un aleatorio y que será el error para la prueba de *F* usando la función `Error()`
 
-```{r}
+```r
 # Sintaxis correcta para ANOVA jerárquico según Schefler
 modelo_anidado_3 <- aov(Conc ~ Lago + Error(Sitio), data = datos_anidados)
 resumen_anid_3 <- summary(modelo_anidado_3)
@@ -182,7 +182,7 @@ Note que solo cuando especificamos que Sitio es el error residual, obtuvimos el 
 
 Intentemos ahora usar un método distinto para generar un análisis de varianza. Esta ajustaremos el modelo con la función `lmer` del paquete `lme4`
 
-```{r}
+```r
 library(lme4)
 library(lmerTest) # Fundamental para obtener valores p
 modelo_anidado_lmer <- lmer(Conc ~ Lago + (1 | Sitio), data = datos_anidados)
@@ -193,7 +193,7 @@ Para profundizar más sobre el uso de `lmer` puede revisar [esta nota](Nota_sobr
 
 **Cálculo manual crítico:** Por defecto, la función `summary` de R calcula el *F* de los Lagos dividiendo su Media Cuadrática (MC) por la MC del *Residuo*. **¡Esto es incorrecto teóricamente para inferir sobre los lagos!** Debemos dividir la MC de los Lagos por la MC de los Sitios(Lagos).
 
-```{r}
+```r
 # Extrayendo Medias Cuadráticas (Mean Squares)
 MC_Lago <- resumen_anid[[1]][["Mean Sq"]][1]
 MC_Sitio_en_Lago <- resumen_anid[[1]][["Mean Sq"]][2]
@@ -217,7 +217,7 @@ cat("Valor p verdadero calculado con pf():", signif(p_valor_lago, 4), "\n")
 
 Recordemos que el factor principal (Lago) se evaluaba contra la variabilidad de los Sitios anidados. Por tanto, los grados de libertad eran gl_1 = 1 (2 lagos - 1) y el denominador correcto era gl_2 = 4 (los sitios). Al ser tan pocos grados de libertad, la curva F central está muy sesgada. Asumiremos un tamaño del efecto biológico de la contaminación equivalente al estimado (NCP = 4.985). Ver nota abajo para saber cómo estimamos el NCP.
 
-```{r}
+```r
 # Ejecutar comando para Diseño Anidado
 grafico_anidado <- plot_F_power(df1 = 1, df2 = 4, ncp = 4.985, 
                                 test_name = "Jerárquico (Efecto del Lago)", 
@@ -235,7 +235,7 @@ Queremos saber si el efecto del Fármaco es independiente del Sexo, o si existe 
 
 ### 3.1 Generación de Datos y Análisis Exploratorio
 
-```{r}
+```r
 tratamiento <- rep(c("Placebo", "Fármaco"), each = 10)
 sexo <- rep(rep(c("Hombre", "Mujer"), each = 5), times = 2)
 
@@ -257,7 +257,7 @@ tabla_medias <- datos_fact %>%
 kable(tabla_medias, caption = "Media de Reducción de Presión Arterial (mmHg)")
 ```
 
-```{r}
+```r
 # Gráfico de Interacción (Crucial para diseños factoriales)
 ggplot(tabla_medias, aes(x = Tratamiento, y = Media_Reduccion, group = Sexo, color = Sexo)) +
   geom_line(size = 1.5) +
@@ -273,7 +273,7 @@ ggplot(tabla_medias, aes(x = Tratamiento, y = Media_Reduccion, group = Sexo, col
 
 Ajustamos el modelo incluyendo ambos factores principales y su término de interacción (`Tratamiento * Sexo`).
 
-```{r}
+```r
 # Ajuste de ANOVA Factorial (El asterisco incluye efectos principales e interacción)
 modelo_factorial <- aov(Reduccion ~ Tratamiento * Sexo, data = datos_fact)
 res_fact <- summary(modelo_factorial)
@@ -284,7 +284,7 @@ print(res_fact)
 
 En la tabla de salida de R, buscamos la fila correspondiente a `Tratamiento:Sexo`.
 
-```{r}
+```r
 # Extracción de valores para la Interacción
 F_interaccion <- res_fact[[1]][["F value"]][3]
 gl_interaccion <- res_fact[[1]][["Df"]][3]      # (a-1)*(b-1) = 1 * 1 = 1
@@ -303,7 +303,7 @@ Si el valor *p* de la interacción es significativo (usualmente $< 0.05$), como 
 
 Para la interacción de nuestro modelo médico 2x2, calculamos $gl_1 = 1$ y un error residual total de $gl_2 = 16$. Dado que simulamos una interacción masiva (el fármaco funcionaba excelente en mujeres pero no en hombres), usaremos un $NCP$ muy alto ($NCP = 25$).
 
-```{r}
+```r
 # Ejecutar comando para Diseño Factorial
 grafico_factorial <- plot_F_power(df1 = 1, df2 = 16, ncp = 25, 
                                   test_name = "Factorial (Interacción Fármaco x Sexo)", 
