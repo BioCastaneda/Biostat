@@ -60,7 +60,7 @@ leveneTest(AUC ~ sex, data=tac)
 #
 # Ajustamos el modelo lineal
 m1 <- lm(AUC ~ sex, data=tac)
-plot(m1
+plot(m1)
 shapiro.test(residuals(m1))
 #
 # Revisamos los resultados
