@@ -130,6 +130,8 @@ Ahora vamos a analizar si los valores plasmáticos de tacrolimus permiten determ
 Primero analizaremos la relación entre C0 y AUC.
 ```
 m2 <- lm(AUC ~ C0, data=tac)
+plot(m2)
+
 anova(m2)
 summary(m2)
 
