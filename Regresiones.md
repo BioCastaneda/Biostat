@@ -26,25 +26,23 @@ str(tac)
 # Definir las categorias como factores
 tac$sex <- as.factor(tac$SEX)
 tac$phenotype <- as.factor(tac$phenotype)
-tac$brand <- as.factor(tac$phenotype)
+tac$brand <- as.factor(tac$brand)
 ```
 
 Ahora graficamos los histogramas de frecuencia para cada valor plasmático de tacrolimus: C0, C1, C2, C4, C12, C24.
 ```
-hist(tac$C0)
-#
-par(mfrow=c(3,2))
-#par(mar=c(3,3,1,1))
-hist(tac$C0)
-hist(tac$C1)
-hist(tac$C2)
-hist(tac$C4)
-hist(tac$C12)
-hist(tac$C24)
-par(mfrow=c(1,1))
+library(ggpubr)
+plot1 <- gghistogram(tac$C0)
+plot2 <- gghistogram(tac$C1)
+plot3 <- gghistogram(tac$C2)
+plot4 <- gghistogram(tac$C4)
+plot5 <- gghistogram(tac$C12)
+plot6 <- gghistogram(tac$C24)
+
+ggarrange(plot1, plot2, plot3, plot4, plot5, plot6, ncol=2, nrow=3)
 ```
 
-Obtenemos los promedios, desviaciones estándares y número de muestras para grupo.
+Obtenemos los promedios, desviaciones estándares y número de muestras para la variable AUC en cada sexo.
 ```
 with(tac,tapply(AUC,list(sex),mean))
 with(tac,tapply(AUC,list(sex),sd))
@@ -57,10 +55,13 @@ Ahora lo que vamos a hacer es comparar los valores de AUC entre hombres y mujere
 shapiro.test(tac$AUC)
 #
 # Análisis de homocedasticidad
-fligner.test(AUC ~ sex, data=tac)
+library(car)
+leveneTest(AUC ~ sex, data=tac)
 #
 # Ajustamos el modelo lineal
 m1 <- lm(AUC ~ sex, data=tac)
+plot(m1
+shapiro.test(residuals(m1))
 #
 # Revisamos los resultados
 anova(m1)
@@ -131,12 +132,16 @@ Primero analizaremos la relación entre C0 y AUC.
 m2 <- lm(AUC ~ C0, data=tac)
 anova(m2)
 summary(m2)
+
+library(performance)
+check_model(m2)
 ```
 
 Ahora analizaremos la relación entre C12 y AUC.
 ```
 m3 <- lm(AUC ~ C12, data=tac)
 summary(m3)
+check_model(m3)
 ```
 
 Grafiquemos la relación entre C12 y AUC.
@@ -155,6 +160,8 @@ Ahora vamos a realizar una regresión múltiple solo con las primeros cuatro mue
 ```
 m4 <- lm(AUC ~ C0+C1+C2+C4, data=tac)
 summary(m4)
+
+check_model(m4)
 ```
 
 Ahora corremos otros modelos que tienen un tres muestras temporales.
@@ -186,7 +193,6 @@ AIC(m8)
 
 Finalmente, podemos hacer una comparación global entre estos modelos, comparando sus desempeños estadísticos
 ```
-library(performance)
 comp <- compare_performance(m4,m5,m6,m7,m8, rank=TRUE)
 comp
 ```
@@ -214,6 +220,8 @@ Corremos una regresión logística simple entre el estado de diabetes y los nive
 ```
 m9 <- glm(Outcome ~ Glucose, data=pima, family=binomial)
 summary(m9)
+
+check_model(m9)
 ```
 
 Grafiquemos esta regresión
