@@ -26,7 +26,7 @@ levels(data1$Classification)
 Estimar las correlaciones entre todas las variables.
 ```
 data2 <- data1[,-10]
-cor.mat <- data1 %>% cor_mat()
+cor.mat <- data2 %>% cor_mat()
 cor.mat
 #
 # Veamos qué correlaciones son significativas.
