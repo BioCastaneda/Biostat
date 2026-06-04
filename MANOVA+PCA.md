@@ -156,11 +156,10 @@ ggqqplot(data1$PC1)
 leveneTest(data1$PC1 ~ data1$Classification)  
 
 ## ANOVA usando el PC1
-test3 <- aov(PC1 ~ site, data=data1)
+test3 <- aov(PC1 ~ Classification, data=data1)
 anova(test3)    
-kruskal.test(PC1 ~ Stress, data=data1)
+kruskal.test(PC1 ~ Classification, data=data1)
 
 # Gráfico
-ggboxplot(data1, x="Stress", y="PC1", col="black", ylab="PC1", xlab="Sitios", add="jitter")
-
+ggboxplot(data1, x="Classification", y="PC1", col="black", ylab="PC1", xlab="Condición", add="jitter")
 ```
