@@ -47,31 +47,32 @@ cor.mat %>% pull_lower_triangle() %>% cor_plot()
 Ahora evaluaremos los supuestos del MANOVA
 ```
 ## Primero de forma normalidad univariada
-shapiro.test(data1[,1])
-shapiro.test(data1[,2])
-shapiro.test(data1[,3])
-shapiro.test(data1[,4])
-shapiro.test(data1[,5])
-shapiro.test(data1[,6])
-shapiro.test(data1[,7])
-shapiro.test(data1[,8])
-shapiro.test(data1[,9])
+shapiro.test(data1$Age)
+shapiro.test(data1$BMI)
+shapiro.test(data1$Glucose)
+shapiro.test(data1$Insulin)
+shapiro.test(data1$HOMA)
+shapiro.test(data1$Leptin)
+shapiro.test(data1$Adiponectin)
+shapiro.test(data1$Resistin)
+shapiro.test(data1$MCP.1)
 
 ## Luego normalidad multivariada
 library(MVN)
-mvn(data1[,c(1:9)],mvnTest="hz")
+mvn(data1[,c(1:9)],mvn_test="hz")
 #
 ## Ahora la homogeneidad de varianzas
 library(car)
 leveneTest(data1[,1]) ~data1[,10]))
-leveneTest(data1[,2]) ~data1[,10]))
-leveneTest(data1[,3]) ~data1[,10]))
-leveneTest(data1[,4]) ~data1[,10]))
-leveneTest(data1[,5]) ~data1[,10]))
-leveneTest(data1[,6]) ~data1[,10]))
-leveneTest(data1[,7]) ~data1[,10]))
-leveneTest(data1[,8]) ~data1[,10]))
-leveneTest(data1[,9]) ~data1[,10]))
+leveneTest(data1$Age ~ data1$Classification)
+leveneTest(data1$BMI ~ data1$Classification)
+leveneTest(data1$Glucose ~ data1$Classification)
+leveneTest(data1$Insulin ~ data1$Classification)
+leveneTest(data1$HOMA ~ data1$Classification)
+leveneTest(data1$Leptin ~ data1$Classification)
+leveneTest(data1$Adiponectin ~ data1$Classification)
+leveneTest(data1$Resistin ~ data1$Classification)
+leveneTest(data1$MCP.1 ~ data1$Classification)
 #
 ## Ahora evaluaremos la presencia de outliers
 mahalanobis_distance(data = data1[, c(,1:9)])$is.outlier
