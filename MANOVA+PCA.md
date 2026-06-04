@@ -14,7 +14,7 @@ En este realizaremos diversos análisis multivariados en R. Primero realizaremos
 
 Descargar los datos contenidos en el archivo Excel [dataR2](https://github.com/lecastaneda/Bioestadistica/blob/main/dataR2.xlsx)
 
-Este set de datos consta de 116 observaciones, de las cuales 64 pacientes tienen cáncer de mama y 52 forman parte del grupo de control. El conjunto de datos consta de 10 variables: Edad (años), IMC (kg/m²), Glucosa (mg/dL), Insulina (µU/mL), HOMA, Leptina (ng/mL), Adiponectina (µg/mL), Resistina (ng/mL), MCP-1 (pg/dL), y Clasificación (1 = controles sanos, 2 = pacientes (con cáncer))
+Este set de datos consta de 116 observaciones, de las cuales 64 pacientes tienen cáncer de mama y 52 forman parte del grupo de control. El conjunto de datos consta de 10 variables: Edad (años), IMC (kg/m²), Glucosa (mg/dL), Insulina (µU/mL), HOMA, Leptina (ng/mL), Adiponectina (µg/mL), Resistina (ng/mL), MCP-1 (pg/dL), y Clasificación (1 = controles sanos, 2 = pacientes con cáncer).
 
 ```
 ## Cargar los siguientes paquetes
@@ -80,7 +80,9 @@ mahalanobis_distance(data = data1[, c(1:9)])$is.outlier
 
 Ahora realizaremos el MANOVA
 ```
-m0 <- manova(cbind(data1[,1:9) ~ data1[,9])
+data1$newVar <- cbind(data1$Age,data1$BMI,data1$Glucose,data1$Insulin,data1$HOMA,
+                data1$Leptin,data1$Adiponectin,data1$Resistin,data1$MCP.1)
+m0 <- manova(newVar ~ Classification, data=data1)
 anova(m0, test="Wilks")
 #
 ## Cálcular el tamaño del efecto
@@ -89,83 +91,17 @@ eta_squared(m0)
 #
 ## Revisar los resultados del ANOVA para cada variable
 summary.aov(m0)
-# ó
-m1 <- aov(data1$pH ~data1$site); anova(m1)
-m2 <- aov(data1$C ~data1$site); anova(m2)
-m3 <- aov(data1$N ~data1$site); anova(m3)
-m4 <- aov(data1$P ~data1$site); anova(m4)
-m5 <- aov(data1$K ~data1$site); anova(m5)
-#
-## Realizar las pruebas a posteriori
-post.m1 <- TukeyHSD(m1); plot(post.m1)
-post.m2 <- TukeyHSD(m1); plot(post.m2)
-post.m3 <- TukeyHSD(m1); plot(post.m3)
-post.m5 <- TukeyHSD(m1); plot(post.m5)
 ```
 
-Gráfiquemos una de las variables: pH
+Gráfiquemos una de las variables: Insulina
 ```
-plot1 <- ggboxplot(data1, x="site", y="pH", col="black", ylab="pH", xlab="Sitios", add="jitter")
+plot1 <- ggboxplot(data1, x="Classification", y="Insulina", col="black", ylab="Insulina (µU/mL)", xlab="Condición", add="jitter") +
+            scale_x_discrete(labels = c("Control", "Cáncer"))
 plot1
-#
-
-## Establecer posiciones de las líneas
-## Pero primero ordenaremos los sitios de mayor a menor para
-## favorecer la estética del gráfico
-data1$site <- factor(data1$site, levels=c("Neltume","Huillilemu","Catanli","LasPalmas","Pelchuquin"))
-#
-## Volvemos a gráficas
-plot1 <- ggboxplot(data1, x="site", y="pH", col="black", ylab="pH", xlab="Sitios", add="jitter")
-plot1
-#
-## Realizamos la prueba a posteriori
-test1 <- data1 %>% t_test(pH~site) %>% add_significance() %>% adjust_pvalue(method="fdr")
-test1
-## Agragamos las posiciones en el y donde queremos que vayan las líneas de significancia
-test1a <- test1 %>% add_xy_position(x="site",dodge=0.8) %>% 
-  mutate(y.position=c(7.1,6.95,6.8,6.65,6.5,6.35,6.2,6.05,5.9,5.6))
-test1a
-#
-## Gráfico final
-plot1 + stat_pvalue_manual(test1a,label="p.adj.signif",tip.length = 0.01)
-# 
-## Este gráfico tiene todas las significancias entre pares de sitios,
-## pero se ve muy saturado, así que dejaremos solo las comparaciones significativas
-## Para esto, reemplazamos las líneas que no queremos cono NAs
-test1b <- test1 %>% add_xy_position(x="site",dodge=0.8) %>% 
-  mutate(y.position=c(NA,NA,6.8,6.65,NA,NA,NA,NA,NA,NA))
-test1b
-#
-## Gráfico final v2
-plot1+stat_pvalue_manual(test1b,label="p.adj.signif",tip.length = 0.01)
-
 ```
 
 ---
 ## 2. Análisis de componentes principales
-
-Descargar los datos contenidos en el archivo de texto [Phylum](https://github.com/BioCastaneda/Inverskin/blob/main/archivos/DSdata_phylum.xlsx)
-
-Este set de datos contiene las abundancias (relativas y absolutas) de bacterias asociadas al intestito de Drosophila subobscura a nivel taxonómico de phylum.
-
-Analizamos las correlaciones entre variables
-```
-library(ggpubr)
-library(car)
-library(readxl)
-library(factoextra)
-library(FactoMineR)
-
-data1 <- read_xlsx("DSdata_phylum.xlsx")
-head(data1)
-dim(data1)
-str(data1)
-#
-## Seleccionamos las columnas con las abundancias absolutas
-data2 <- data1[,c(9:13)]
-cor.mat <- data2 %>% cor_mat()
-cor.mat %>% pull_lower_triangle() %>% cor_plot()
-```
 
 Realicemos el PCA
 ```
