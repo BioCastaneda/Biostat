@@ -12,32 +12,26 @@ En este realizaremos diversos análisis multivariados en R. Primero realizaremos
 ---
 ## 1. Análisis de varianza multivariado (MANOVA)
 
-Descargar los datos contenidos en el archivo de texto [Suelos](https://github.com/lecastaneda/Bioestadistica/blob/main/Suelos.txt)
+Descargar los datos contenidos en el archivo Excel [Suelos](https://github.com/lecastaneda/Bioestadistica/blob/main/dataR2.xlsx)
 
-Este set datos incluye diversas variabiles físico-químicas asociadas a muestras de suelos provenientes de 5 bosques de raulíes en la Región de Los Ríos.
+Este set de datos consta de 116 observaciones, de las cuales 64 pacientes tienen cáncer de mama y 52 forman parte del grupo de control. El conjunto de datos consta de 10 variables: Edad (años), IMC (kg/m²), Glucosa (mg/dL), Insulina (µU/mL), HOMA, Leptina (ng/mL), Adiponectina (µg/mL), Resistina (ng/mL), MCP-1 (pg/dL), y Clasificación (1 = controles sanos, 2 = pacientes (con cáncer))
+
 ```
 ## Cargar los siguientes paquetes
 library(ggpubr)
 library(rstatix)
+library(readxl)
 
 ## cargar los datos
-data1 <- read.table("Suelos.txt", header=T)
+data1 <- read_xlsx("dataR2.xlsx")
 head(data1)
 str(data1)
-data1$site <- as.factor(data1$site)
+data1$Classification <- as.factor(data1$Classification)
+```
 
-## Estimar las correlaciones entre todas las variables físico-químicas.
-cor(data1)
-head(data1)
-
-## Una matriz de correlaciones solo puede obtenerse a partir de variables númericas.
-## Por lo tanto debemos excluir las variables agrupadoras
-data2 <- data1[,-c(1,2)]
-cor(data2)
-round(cor(data2),2) # coeficientes de correlación con dos cifras significativas
-
-## Ahora hagamos lo mismo, pero con el paquete rstatix
-cor.mat <- data2 %>% cor_mat()
+Estimar las correlaciones entre todas las variables.
+```
+cor.mat <- data1 %>% cor_mat()
 cor.mat
 #
 # Veamos qué correlaciones son significativas.
