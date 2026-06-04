@@ -56,7 +56,6 @@ mvn(data1[,c(1:9)],mvn_test="hz")
 #
 ## Ahora la homogeneidad de varianzas
 library(car)
-leveneTest(data1[,1]) ~data1[,10]))
 leveneTest(data1$Age ~ data1$Classification)
 leveneTest(data1$BMI ~ data1$Classification)
 leveneTest(data1$Glucose ~ data1$Classification)
