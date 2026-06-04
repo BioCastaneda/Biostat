@@ -104,7 +104,9 @@ library(car)
 library(readxl)
 library(factoextra)
 library(FactoMineR)
-ds.pca <- PCA(data2, graph=F)
+
+## Correr el PCA
+ds.pca <- PCA(data2, graph=T)
 
 ## Calcular los eigenvalues para cada componente principal
 ds.pca$eig
@@ -123,6 +125,7 @@ fviz_eig(ds.pca, addlabels = TRUE, ylim = c(0, 80))
 
 Grafiquemos los componentes principales 1 y2 
 ```
+levels(data1$Classification) <- c("Control", "Tratamiento")
 plot.pca <- fviz_pca_biplot(ds.pca, 
                             # Individuals
                             geom.ind = "point",
@@ -139,15 +142,18 @@ plot.pca
 
 Análicemos cómo varía PC1 entre ambos tratamientos
 ```
-# Vamos a crear una matriz con los datos de coordendas 
+## Vamos a crear una matriz con los datos de coordendas 
 pca.coord <- as.matrix(ds.pca$ind$coord)
 
+### Agregar la variable PC1 al dataset "data"
+data1$PC1 <- pca.coord[,1]   
 
-data1$PC1 <- pca.coord[,1]   # Agregar la variable PC1 al dataset "data"
-
-shapiro.test(data1$PC1)  # Prubea de normalidad
+## Prubea de normalidad
+shapiro.test(data1$PC1)  
 ggqqplot(data1$PC1)
-leveneTest(data1$PC1 ~ data1$site)  # Prueba de homocedasticidad
+
+## Prueba de homocedasticidad
+leveneTest(data1$PC1 ~ data1$Classification)  
 
 ## ANOVA usando el PC1
 test3 <- aov(PC1 ~ site, data=data1)
