@@ -32,6 +32,7 @@ levels(data1$Classification)
 
 Estimar las correlaciones entre todas las variables.
 ```
+data2 <- data1[,-10]
 cor.mat <- data1 %>% cor_mat()
 cor.mat
 #
@@ -43,34 +44,42 @@ cor.mat %>% cor_mark_significant()
 cor.mat %>% pull_lower_triangle() %>% cor_plot()
 ```
 
-En el siguiente paso realizaremos un MANOVA, pero solo con un subset de datos. Basándonos en la matriz de correlación, seleccionares las variables pH, cárbono (C), nitrógeno (N), fósforo (P) y potasio (K).
-
+Ahora evaluaremos los supuestos del MANOVA
 ```
-head(data)
-#
-## pH (columna 3), cárbono (columna 4), nitrógeno (columna 5), fósforo (columna 8) y potasio (columna 9).
-## Cálculemos el promedio, desviación estándar y número de muestras para cada localidad
-aggregate(data1[,c(3,4,5,8,9)],list(data1$site),mean)
-aggregate(data1[,c(3,4,5,8,9)],list(data1$site),sd)
-aggregate(data1[,c(3,4,5,8,9)],list(data1$site),length)
-#
-## Evaluar la normalidad multivariada
+## Primero de forma normalidad univariada
+shapiro.test(data1[,1])
+shapiro.test(data1[,2])
+shapiro.test(data1[,3])
+shapiro.test(data1[,4])
+shapiro.test(data1[,5])
+shapiro.test(data1[,6])
+shapiro.test(data1[,7])
+shapiro.test(data1[,8])
+shapiro.test(data1[,9])
+
+## Luego normalidad multivariada
 library(MVN)
-mvn(data1[,c(3,4,5,8,9)],mvnTest="hz")
+mvn(data1[,c(1:9)],mvnTest="hz")
 #
-## Evaluar la homogeneidad de varianzas
+## Ahora la homogeneidad de varianzas
 library(car)
-leveneTest(data1$pH ~data1$site)
-leveneTest(data1$C ~data1$site)
-leveneTest(data1$N ~data1$site)
-leveneTest(data1$P ~data1$site)
-leveneTest(data1$K ~data1$site)
+leveneTest(data1[,1]) ~data1[,10]))
+leveneTest(data1[,2]) ~data1[,10]))
+leveneTest(data1[,3]) ~data1[,10]))
+leveneTest(data1[,4]) ~data1[,10]))
+leveneTest(data1[,5]) ~data1[,10]))
+leveneTest(data1[,6]) ~data1[,10]))
+leveneTest(data1[,7]) ~data1[,10]))
+leveneTest(data1[,8]) ~data1[,10]))
+leveneTest(data1[,9]) ~data1[,10]))
 #
-## Evaluar presencia de outliers
-mahalanobis_distance(data = data1[, c("pH","C","N","P","K")])$is.outlier
-#
-## Realizar el MANOVA
-m0 <- manova(cbind(pH,C,N,P,K) ~ site, data=data1)
+## Ahora evaluaremos la presencia de outliers
+mahalanobis_distance(data = data1[, c(,1:9)])$is.outlier
+```
+
+Ahora realizaremos el MANOVA
+```
+m0 <- manova(cbind(data1[,1:9) ~ data1[,9])
 anova(m0, test="Wilks")
 #
 ## Cálcular el tamaño del efecto
