@@ -105,6 +105,12 @@ plot1
 
 Realicemos el PCA
 ```
+## Primero cargamos las librerías
+library(ggpubr)
+library(car)
+library(readxl)
+library(factoextra)
+library(FactoMineR)
 ds.pca <- PCA(data2, graph=F)
 
 ## Calcular los eigenvalues para cada componente principal
