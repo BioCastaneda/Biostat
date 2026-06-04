@@ -3,13 +3,6 @@
 En este realizaremos diversos análisis multivariados en R. Primero realizaremos un análisis multivariado de varianza (MANOVA) y luego un análisis de componentes principales (PCA):
 
 ---
-
-## Contenido
-
-1. [Análisis de varianza múltivariado](https://github.com/lecastaneda/Bioestadistica/edit/main/Pr%C3%A1ctico5.md#1-an%C3%A1lisis-de-varianza-multivariado-manova)
-2. [Análisis de componentes principales](https://github.com/lecastaneda/Bioestadistica/blob/main/Pr%C3%A1ctico5.md#2-an%C3%A1lisis-de-componentes-principales)
-
----
 ## 1. Análisis de varianza multivariado (MANOVA)
 
 Descargar los datos contenidos en el archivo Excel [dataR2](https://github.com/lecastaneda/Bioestadistica/blob/main/dataR2.xlsx)
