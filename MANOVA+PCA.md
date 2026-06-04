@@ -128,13 +128,13 @@ levels(data1$Classification) <- c("Control", "Tratamiento")
 plot.pca <- fviz_pca_biplot(ds.pca, 
                             # Individuals
                             geom.ind = "point",
-                            fill.ind = data1$Stress, col.ind = "black",
+                            fill.ind = data1$Classification, col.ind = "black",
                             pointshape = 21, pointsize = 2,
                             palette = c("red","blue"),
                             # Variables
                             alpha.var=1, col.var = "black",
                             gradient.cols = "black",
-                            legend.title = list(fill = "Stress"))
+                            legend.title = list(fill = "Condición"))
 
 plot.pca
 ```
