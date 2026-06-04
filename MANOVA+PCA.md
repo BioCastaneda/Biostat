@@ -7,7 +7,7 @@ En este realizaremos diversos análisis multivariados en R. Primero realizaremos
 
 Descargar los datos contenidos en el archivo Excel [dataR2](https://github.com/BioCastaneda/Biostat/blob/main/dataR2.xlsx)
 
-Este set de datos consta de 116 observaciones, de las cuales 64 pacientes tienen cáncer de mama y 52 forman parte del grupo de control. El conjunto de datos consta de 10 variables: Edad (años), IMC (kg/m²), Glucosa (mg/dL), Insulina (µU/mL), HOMA, Leptina (ng/mL), Adiponectina (µg/mL), Resistina (ng/mL), MCP-1 (pg/dL), y Clasificación (1 = controles sanos, 2 = pacientes con cáncer). Ver [paper]
+Este set de datos consta de 116 observaciones, de las cuales 64 pacientes tienen cáncer de mama y 52 forman parte del grupo de control. El conjunto de datos consta de 10 variables: Edad (años), IMC (kg/m²), Glucosa (mg/dL), Insulina (µU/mL), HOMA, Leptina (ng/mL), Adiponectina (µg/mL), Resistina (ng/mL), MCP-1 (pg/dL), y Clasificación (1 = controles sanos, 2 = pacientes con cáncer). Ver [paper](https://github.com/BioCastaneda/Biostat/blob/main/s12885-017-3877-1.pdf)
 
 ```
 ## Cargar los siguientes paquetes
