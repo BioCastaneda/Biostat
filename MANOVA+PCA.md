@@ -75,7 +75,7 @@ leveneTest(data1$Resistin ~ data1$Classification)
 leveneTest(data1$MCP.1 ~ data1$Classification)
 #
 ## Ahora evaluaremos la presencia de outliers
-mahalanobis_distance(data = data1[, c(,1:9)])$is.outlier
+mahalanobis_distance(data = data1[, c(1:9)])$is.outlier
 ```
 
 Ahora realizaremos el MANOVA
