@@ -34,7 +34,7 @@ cor.mat %>% cor_mark_significant()
 
 2. Realizamos el PCA
 ```
-pca <- prcomp(data2, sacale=F)  # scale=F porque las variables están en las unidades
+pca <- prcomp(data2, scale=F)  # scale=F porque las variables están en las unidades
 summary(pca)
 plot(pca)   # Grafica la varianza explicada por cada PCs
 biplot(pca) # Gráfico básico de los vectores asociados las variables respuesta y la ubicación espacial de las muestras
